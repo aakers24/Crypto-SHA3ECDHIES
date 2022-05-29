@@ -391,7 +391,9 @@ public class sha3 {
     	byte[] encK = encode_string(K);
     	byte[] bpK = bytepad(encK, 136);
     	
-    	byte[] newX = new byte[bpK.length + X.length + 2];
+    	byte[] newX;
+    	
+    	newX = new byte[bpK.length + X.length + 2];
     	
     	System.arraycopy(bpK, 0, newX, 0, bpK.length);
 		System.arraycopy(X, 0, newX, bpK.length, X.length);
@@ -412,7 +414,7 @@ public class sha3 {
     		xPad[X.length] = (byte) 0x1f;
     	}
     	
-    	return kecSponge(xPad, L, 512);
+    	return kecSponge(xPad, 512, L);
     }
     
     public static byte[] cShake256(byte[] X, int L, String N, String S) {
@@ -448,7 +450,7 @@ public class sha3 {
     	System.arraycopy(nsPad, 0, nsx, 0, nsPad.length);
 		System.arraycopy(xPad, 0, nsx, nsPad.length, xPad.length);
 		
-		return kecSponge(nsx, L, 512);
+		return kecSponge(nsx, 512, L);
     }
 
 }
