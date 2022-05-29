@@ -4,9 +4,9 @@ public class Point {
 	
 	private BigInteger x, y;
 	
-	private static BigInteger D = BigInteger.valueOf(-376014);
+	private static final BigInteger D = BigInteger.valueOf(-376014);
 	
-	private static BigInteger P = BigInteger.valueOf(2).pow(521).subtract(BigInteger.ONE);
+	private static final BigInteger P = BigInteger.valueOf(2).pow(521).subtract(BigInteger.ONE);
 	
 	private static final Point NeutralElement = new Point(BigInteger.valueOf(0), BigInteger.valueOf(1));
 
@@ -138,6 +138,46 @@ public class Point {
 	}
 	
 	
+	// Logic comes from reference code KeccakUtils
+	public static byte[] pointToBytes(Point p) {
+		byte[] bytes = new byte[P.toByteArray().length  * 2];
+		byte[] x = p.getX().toByteArray();
+		byte[] y = p.getY().toByteArray();
+		
+		int xPos = (P.toByteArray().length  * 2) / 2 - x.length;
+		int yPos = bytes.length - y.length;
+
+	    if (p.getX().signum() < 0) {
+	    	for(int i = 0; i < xPos; i++) {
+	    		bytes[i] = (byte) 0xff;
+	    	}
+	    }
+	    if (p.getY().signum() < 0) {
+	    	for(int i = (P.toByteArray().length  * 2) / 2; i < yPos; i++) {
+	    		bytes[i] = (byte) 0xff;
+	    	}
+	    }
+	    
+	    System.arraycopy(x, 0, bytes, xPos, x.length);
+	    System.arraycopy(y, 0, bytes, yPos, y.length);
+	    
+	    return bytes;
+	}
+	
+	//Logic comes from reference code KeccakUtils
+	public static Point bytesToPoint(byte[] b) {
+		byte[] bx = new byte[(P.toByteArray().length  * 2) / 2];
+		byte[] by = new byte[(P.toByteArray().length  * 2) / 2];
+		
+		System.arraycopy(b, 0, bx, 0, bx.length);
+		System.arraycopy(b, bx.length, by, 0, by.length);
+		
+		BigInteger x = new BigInteger(bx);
+		BigInteger y = new BigInteger(by);
+		
+		return new Point(x, y);
+	}
+	
 	
 	// Probably unnecessary
 	public Point getNeutralElement() {
@@ -151,8 +191,6 @@ public class Point {
 	public BigInteger getY() {
 		return y;
 	}
-	
-	
 	
 	
 	

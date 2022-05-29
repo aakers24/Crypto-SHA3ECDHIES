@@ -100,23 +100,165 @@ public class program {
 		return c;
 	}
 	
-	public static Point keyPair(byte[] pw) {
-		byte[] s = sha3.kmacxof256(pw, new byte[]{}, 512, "K");
+	public static byte[] ecEncrypt(Point V, byte[] M) {
+		SecureRandom random = new SecureRandom();
+		byte[] k = new byte[64];
+		random.nextBytes(k);
 		
-		BigInteger s2 = new BigInteger(s);
-		
-//		if(s2.signum() == -1) {
-//			s2.negate();
-//		}
-		
-		s2 = s2.multiply(BigInteger.valueOf(4));
+		BigInteger k2 = new BigInteger(k);
+		k2 = k2.multiply(BigInteger.valueOf(4));
 		
 		Point G = new Point(BigInteger.valueOf(4), false);
 		
-		Point V = G.multiplyScalar(s2);
+		Point W = V.multiplyScalar(k2);
 		
-		return V;
+		Point Z = G.multiplyScalar(k2);
+		
+		byte[] keka = sha3.kmacxof256(W.getX().toByteArray(), new byte[]{}, 1024, "P");
+		
+		byte[] ke = new byte[64];
+		byte[] ka = new byte[64];
+		
+		System.arraycopy(keka, 0, ke, 0, ke.length);
+		System.arraycopy(keka, 64, ka, 0, ka.length);
+		
+		byte[] ke2 = sha3.kmacxof256(ke, new byte[]{}, M.length*8, "PKE");
+		byte[] c = xorBytes(ke2, M);
+		
+		byte[] t = sha3.kmacxof256(ka, M, 512, "PKA");
+		
+		byte[] zbytes = Point.pointToBytes(Z);
+		
+		byte[] zct = new byte[zbytes.length + c.length + t.length];
+		
+		System.arraycopy(zbytes, 0, zct, 0, zbytes.length);
+		System.arraycopy(c, 0, zct, zbytes.length, c.length);
+		System.arraycopy(t, 0, zct, zbytes.length + c.length, t.length);
+		
+		return zct;
 	}
+	
+	public static byte[] ecDecrypt(byte[] zct, byte[] pw) {
+		byte[] z = new byte[132];
+		byte[] t = new byte[64];
+		byte[] c = new byte[zct.length - (z.length + t.length)];
+		
+		System.arraycopy(zct, 0, z, 0, z.length);
+		System.arraycopy(zct, z.length, c, 0, c.length);
+		System.arraycopy(zct, zct.length - t.length, t, 0, t.length);
+		
+		byte[] s = sha3.kmacxof256(pw, new byte[]{}, 512, "K");
+		
+		BigInteger s2 = new BigInteger(s);
+		s2 = s2.multiply(BigInteger.valueOf(4));
+		
+		Point Z = Point.bytesToPoint(z);
+		
+		Point W = Z.multiplyScalar(s2);
+		
+		byte[] keka = sha3.kmacxof256(W.getX().toByteArray(), new byte[]{}, 1024, "P");
+		
+		byte[] ke = new byte[64];
+		byte[] ka = new byte[64];
+		
+		System.arraycopy(keka, 0, ke, 0, ke.length);
+		System.arraycopy(keka, 64, ka, 0, ka.length);
+		
+		byte[] ke2 = sha3.kmacxof256(ke, new byte[]{}, c.length*8, "PKE");
+		byte[] m = xorBytes(ke2, c);
+		
+		byte[] tPrime = sha3.kmacxof256(ka, m, 512, "PKA");
+		
+		// Integrity Check
+			if(Arrays.equals(t, tPrime)) {
+				return m;
+			} else {
+				System.out.println("Integrity Check Failed.");
+				return null;
+			}
+	}
+	
+	public static byte[] ecSign(byte[] pw, byte[] m) {
+		
+//		byte[] s = sha3.kmacxof256(pw, new byte[]{}, 512, "K");
+//		
+//		BigInteger s2 = new BigInteger(s);
+//		s2 = s2.multiply(BigInteger.valueOf(4));
+		
+		byte[] k = sha3.kmacxof256(pw, m, 512, "N");
+		byte[] kSign = new byte[65];
+		
+		System.arraycopy(k, 0, kSign, 1, k.length);
+		
+		BigInteger k2 = new BigInteger(kSign);
+		k2 = k2.multiply(BigInteger.valueOf(4));
+		
+		Point G = new Point(BigInteger.valueOf(4), false);
+		
+		Point U = G.multiplyScalar(k2);
+		
+		byte[] h = sha3.kmacxof256(U.getX().toByteArray(), m, 512, "T");
+		
+		BigInteger h2 = new BigInteger(h);
+		if(h2.signum() == -1) {
+			h2.negate();
+		}
+		//h2 = h2.multiply(s2);
+		h2 = h2.multiply(new BigInteger(pw));
+		
+		String rOperand = "337554763258501705789107630418782636071904961214051226618635150085779108655765";
+		
+		BigInteger R = (BigInteger.TWO.pow(519)).subtract(new BigInteger(rOperand));
+		
+		BigInteger z = (k2.subtract(h2)).mod(R);
+		
+		byte[] zbytes = z.toByteArray();
+		
+		byte[] hz = new byte[h.length + zbytes.length + 1];
+		
+		System.arraycopy(h, 0, hz, 1, h.length);
+		System.arraycopy(zbytes, 0, hz, 1 + h.length, zbytes.length);
+		
+		return hz;
+	}
+	
+	public static boolean ecVerify(byte[] sig, byte[] m, Point V) {
+		byte[] h = new byte[sig.length / 2];
+		byte[] z = new byte[sig.length / 2];
+		
+		System.arraycopy(sig, 0, h, 0, h.length);
+		System.arraycopy(sig, h.length, z, 0, z.length);
+		
+		BigInteger zInt = new BigInteger(z);
+		BigInteger hInt = new BigInteger(h);
+		
+		Point G = new Point(BigInteger.valueOf(4), false);
+		Point G2 = G.multiplyScalar(new BigInteger(z));
+		
+		Point V2 = V.multiplyScalar(new BigInteger(h));
+		
+		Point U = Point.addPoints(G2, V2);
+		
+		// Integrity Check
+		byte[] preU2 = sha3.kmacxof256(U.getX().toByteArray(), m, 512, "T");
+		byte[] U2 = new byte[65];
+		System.arraycopy(preU2, 0, U2, 1, preU2.length);
+		if(Arrays.equals(h, U2)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
 	
 	private static void testPart1() {
 		
@@ -260,7 +402,7 @@ public class program {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+		System.out.println("\n\n\n");
 		
 		
 		
@@ -280,39 +422,50 @@ public class program {
 		
 		System.out.println("KeyPair");
 		
-		Point p = keyPair(key);
+		KeyPair p = new KeyPair(key);
 		
-		System.out.println(p.getX() + " " + p.getY());
+		System.out.println(p.getPoint().getX() + " " + p.getPoint().getY());
 		
 		
 		
-//		System.out.println("\nTag");
-//		
-//		test = tag(key, testInput);
-//		
-//		for(int i = 0; i < test.length; i++) {
-//			System.out.print(String.format("%02X ", test[i]));
-//		}
-//		
-//		System.out.println();
-//		
-//		System.out.println("\n Enc:");
-//		
-//		test = symEncrypt(key, inputBytes);
-//		
-//		for(int i = 0; i < test.length; i++) {
-//			System.out.print(String.format("%02X ", test[i]));
-//		}
-//		
-//		
-//		
-//		System.out.println("\n Dec:");
-//		
-//		test = symDecrypt(test, key);
-//		
-//		for(int i = 0; i < test.length; i++) {
-//			System.out.print(String.format("%02X ", test[i]));
-//		}
+		System.out.println();
+		
+		System.out.println(" ecEnc:");
+		
+		test = ecEncrypt(p.getPoint(), inputBytes);
+		
+		for(int i = 0; i < test.length; i++) {
+			System.out.print(String.format("%02X ", test[i]));
+		}
+		
+		
+		
+		System.out.println("\n ecDec:");
+		
+		test = ecDecrypt(test, key);
+		
+		for(int i = 0; i < test.length; i++) {
+			System.out.print(String.format("%02X ", test[i]));
+		}
+		
+		
+		
+		System.out.println("\n");
+		System.out.println("Sign:");
+		
+		test = ecSign(p.getPrivateKey().toByteArray(), testInput);
+		
+		for(int i = 0; i < test.length; i++) {
+			System.out.print(String.format("%02X ", test[i]));
+		}
+		
+		
+		System.out.println("\n");
+		System.out.println("Verify:");
+		
+		boolean verification = ecVerify(test, testInput, p.getPoint());
+		
+		System.out.println(verification);
 		
 	}
 	
