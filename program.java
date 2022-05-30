@@ -102,16 +102,14 @@ public class Program {
 				
 				// This is NOT functional
 				case 2:
-					byte[] input = new byte[0];
-					int inPos = 0;
-					while(consoleIn.hasNextByte()) {
-						input[inPos] = consoleIn.nextByte();
-						inPos++;
-					}
-					hash = Envelope.hash(input);
+					consoleIn.next();
+					// Take in new data
+					String rawInput = consoleIn.nextLine();
+					byte[] inputData = parseData(rawInput);
+					//hash = Envelope.hash(input);
 					
-					for(int i = 0; i < hash.length; i++) {
-						System.out.print(String.format("%02X ", hash[i]));
+					for(int i = 0; i < inputData.length; i++) {
+						System.out.print(String.format("%02X ", inputData[i]));
 					}
 
 				default: 
