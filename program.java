@@ -4,23 +4,31 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Program {
+	
+	// Method to parse strings of hex input into their proper byte array equivalent
+	// For passwords/phrases call .getBytes()
+	public static byte[] parseData(String data) {
+		String[] splitData = data.split(" ");
+		
+		byte[] parsedData = new byte[splitData.length];
+		
+		for(int i = 0; i < parsedData.length; i++) {
+			parsedData[i] = (byte) Integer.parseInt(splitData[i], 16);
+		}
+		
+		return parsedData;
+	}
 
 	public static void main(String[] args) {
 		Scanner consoleIn = new Scanner(System.in);
 		int option = -1;
 		
-		// Opening files
+		// Opening file
 		String fileName = System.getProperty("user.dir") + "/src/" + "Data.txt";
-		
-		String fileName2 = System.getProperty("user.dir") + "/src/" + "Passphrase.txt";
 		
 		File file = new File(fileName);
 		
-		File file2 = new File(fileName2);
-		
 		byte[] dataBytes = new byte[1];
-		
-		byte[] passBytes = new byte[1];
 		
 		try {
 			Scanner scanner = new Scanner(file);
@@ -41,29 +49,11 @@ public class Program {
 			
 			System.arraycopy(inputByteBuffer, 0, dataBytes, 0, i);
 			
-			scanner = new Scanner(file2);
-			
-			inputByteBuffer = new byte[256];
-			
-			i = 0;
-			
-			while(scanner.hasNext()) {
-				String inByte = scanner.next();
-				
-				inputByteBuffer[i] = (byte) Integer.parseInt(inByte, 16);
-				
-				i++;
-			}
-			
-			passBytes = new byte[i];
-			
-			System.arraycopy(inputByteBuffer, 0, passBytes, 0, i);
-			
 			scanner.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		// Opening files
+		// Opening file
 		
 		boolean loop = true;
 		while(loop) {
