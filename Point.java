@@ -179,7 +179,7 @@ public class Point {
 	}
 	
 	
-	// Probably unnecessary
+	// Redundant
 	public Point getNeutralElement() {
 		return NeutralElement;
 	}
@@ -192,51 +192,4 @@ public class Point {
 		return y;
 	}
 	
-	
-	
-	public static void main(String[] args) {
-		
-//		System.out.println();
-//		
-//		Point testPoint = new Point(BigInteger.valueOf(0), BigInteger.valueOf(1));
-//		
-//		System.out.println(testPoint.getX().toString() + " " + testPoint.getY().toString());
-//		
-//		Point testPoint2 = new Point(BigInteger.valueOf(1), BigInteger.valueOf(0));
-//		
-//		System.out.println(testPoint2.getX().toString() + " " + testPoint2.getY().toString());
-//		
-//		Point testPointAdd = Point.addPoints(testPoint, testPoint2);
-//		
-//		System.out.println(testPointAdd.getX().toString() + " " + testPointAdd.getY().toString());
-//		
-//		testPoint = new Point(BigInteger.valueOf(4), true);
-//		
-//		System.out.println(testPoint.getX().toString() + " " + testPoint.getY().toString());
-//		
-//		//3032432114286052459734493346589116727620774438186426554571035049389122174539777808394925429974663047808802579026830290200483205984431081241005173227620421363
-//		
-//		testPoint2 = opposite(testPoint);
-//		
-//		System.out.println(testPoint2.getX().toString() + " " + testPoint2.getY().toString());
-//		
-//		System.out.println(testPoint.equals(testPoint2));
-		
-		
-		
-		
-		Point testPoint = new Point(BigInteger.valueOf(4), true);
-		
-		System.out.println(testPoint.getX().toString() + " " + testPoint.getY().toString());
-		
-		testPoint = testPoint.multiplyScalar(BigInteger.valueOf(-4));
-		
-		System.out.println(testPoint.getX().toString() + " " + testPoint.getY().toString());
-		
-		//x 2495955776396604226407267356908013368834389573875394083557177494000105902197484529509184115676817108285435959901009662698340790193587169943973819919739337152
-		//y 6859636288096913776645387651130902474064331811082450899727219308510706266067313575729816646597853898764807212586496241359457440546189884484864185540395703452
-		
-		
-		
-	}
 }

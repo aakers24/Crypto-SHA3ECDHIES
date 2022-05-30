@@ -9,10 +9,6 @@ public class KeyPair {
 			
 			BigInteger s2 = new BigInteger(s);
 			
-//			if(s2.signum() == -1) {
-//				s2.negate();
-//			}
-			
 			s2 = s2.multiply(BigInteger.valueOf(4));
 			
 			Point G = new Point(BigInteger.valueOf(4), false);
