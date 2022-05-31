@@ -2,13 +2,32 @@ package crypto;
 
 import java.math.BigInteger;
 
+
+
+/*
+ * Author: Austin Akers
+ * 
+ * References: 
+ * 		Materials provided by Professor Paulo Barreto including lecture slides, assignment description
+ * 		https://github.com/mjosaarinen/tiny_sha3
+ * 		https://github.com/NWc0de/KeccakUtils
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/C
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/Python
+ * 		NIST documentation:
+ * 			https://dx.doi.org/10.6028/NIST.SP.800-185
+ * 			https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
+ * 
+ * */
+
+
+
 public class Point {
 	
 	private BigInteger x, y;
 	
 	private static final BigInteger D = BigInteger.valueOf(-376014);
 	
-	private static final BigInteger P = BigInteger.valueOf(2).pow(521).subtract(BigInteger.ONE);
+	public static final BigInteger P = BigInteger.valueOf(2).pow(521).subtract(BigInteger.ONE);
 	
 	private static final Point NeutralElement = new Point(BigInteger.valueOf(0), BigInteger.valueOf(1));
 
@@ -18,7 +37,7 @@ public class Point {
 	
 	public Point(BigInteger x, BigInteger y) {
 		
-		// Neutral Element Constructor (?)
+		// Neutral Element Constructor
 		if(x == BigInteger.valueOf(0) && y == BigInteger.valueOf(1)) {
 			this.x = BigInteger.valueOf(0);
 			this.y = BigInteger.valueOf(1);
@@ -72,7 +91,7 @@ public class Point {
 	
 	
 	// Exponentiation algorithm adapted from the project description/lecture slides wasn't working properly for all cases
-	// So I ended up modifying it to the be more like the reference implementation
+	// So I ended up modifying it to the be more like reference implementations
 	public Point multiplyScalar(BigInteger s) {
 		Point pointFactor = this;
 		
@@ -119,9 +138,9 @@ public class Point {
 	
 	
 	
-	// Returns the opposite of a point given the initial point
+	// Returns the opposite of a point given the initial point as defined in the assignment description
 	public static Point opposite(Point ip) {
-		return new Point(ip.getX().negate(), ip.getY());
+		return new Point(ip.getX().negate().mod(P), ip.getY());
 	}
 	
 	
@@ -140,7 +159,7 @@ public class Point {
 	}
 	
 	
-	// Logic comes from reference code KeccakUtils
+	// Logic heavily influenced by reference KeccakUtils
 	public static byte[] pointToBytes(Point p) {
 		byte[] bytes = new byte[P.toByteArray().length  * 2];
 		byte[] x = p.getX().toByteArray();
@@ -166,7 +185,7 @@ public class Point {
 	    return bytes;
 	}
 	
-	//Logic comes from reference code KeccakUtils
+	// Logic heavily influenced by reference KeccakUtils
 	public static Point bytesToPoint(byte[] b) {
 		byte[] bx = new byte[(P.toByteArray().length  * 2) / 2];
 		byte[] by = new byte[(P.toByteArray().length  * 2) / 2];
