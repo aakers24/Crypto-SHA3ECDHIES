@@ -1,0 +1,1 @@
+This is a copy of the main, fully functional, finished CLI version of the crypto project, but it is made to work properly with intelliJ.
