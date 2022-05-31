@@ -6,6 +6,36 @@ import java.math.BigInteger;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+
+
+/*
+ * Author: Austin Akers
+ * 
+ * References: 
+ * 		Materials provided by Professor Paulo Barreto including lecture slides, assignment description
+ * 		https://github.com/mjosaarinen/tiny_sha3
+ * 		https://github.com/NWc0de/KeccakUtils
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/C
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/Python
+ * 		NIST documentation:
+ * 			https://dx.doi.org/10.6028/NIST.SP.800-185
+ * 			https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
+ * 
+ * Most if not all test values are taken from NIST documentation and test vectors.
+ * 
+ * It is expected that data be in hexadecimal bytes, separated by spaces, and no newlines in between. For instance: 01 02 2A 2B CA CB F1 FF
+ * This is the format in which the data is received and delivered.
+ * The exception is the password/passphrase, which can be input as any string.
+ * 		
+ * Data is read from and written to the provided files. It is possible to change this, but that would require manual modification of the program.
+ * Depending on the environment the program is being run in, I have provided 2 ways of accessing the file locations.
+ * These were the ways I got it to work in the different environments I tested the program in.
+ * Again, more flexible, creative, and elegant solutions are possible, but this is the functionality as it is provided.
+ * 
+ * */
+
+
+
 public class Program {
 	
 	// Method to parse strings of hex input in this program's output format(ie 01 A1 3E FF) into their proper byte array equivalent
@@ -28,7 +58,11 @@ public class Program {
 		int option = -1;
 		KeyPair kp = null;
 		
-		// Opening file
+		
+		
+		
+		
+		// Opening files
 		String fileName = System.getProperty("user.dir") + "/src/" + "Data.txt";
 		
 		String fileName2 = System.getProperty("user.dir") + "/src/" + "PublicKey.txt";
@@ -75,7 +109,11 @@ public class Program {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		// Opening file
+		// Opening files
+		
+		
+		
+		
 		
 		boolean loop = true;
 		while(loop) {

@@ -5,15 +5,43 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Scanner;
 
+
+
+/*
+ * Author: Austin Akers
+ * 
+ * References: 
+ * 		Materials provided by Professor Paulo Barreto including lecture slides, assignment description
+ * 		https://github.com/mjosaarinen/tiny_sha3
+ * 		https://github.com/NWc0de/KeccakUtils
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/C
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/Python
+ * 		NIST documentation:
+ * 			https://dx.doi.org/10.6028/NIST.SP.800-185
+ * 			https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
+ * 
+ * Most if not all test values are taken from NIST documentation and test vectors.
+ * 
+ * */
+
+
+
 public class Envelope {
+	
+	// These wrapper methods were written following the descriptions as detailed in the project description
+	// The test methods are just methods I used to execute the test vectors and play around with the methods. They are not formal, but I didn't feel it was necessary to remove them.
 	
 	public static byte[] hash(byte[] M) {
 		return sha3.kmacxof256(new byte[]{}, M, 512, "D");
 	}
 	
+	
+	
 	public static byte[] tag(byte[] PW, byte[] M) {
 		return sha3.kmacxof256(PW, M, 512, "T");
 	}
+	
+	
 	
 	public static byte[] symEncrypt(byte[] PW, byte[] M) {
 		SecureRandom random = new SecureRandom();
@@ -46,6 +74,8 @@ public class Envelope {
 		
 		return zct;
 	}
+	
+	
 	
 	public static byte[] symDecrypt(byte[] zct, byte[] PW) {
 		byte[] z = new byte[64];
@@ -82,8 +112,9 @@ public class Envelope {
 			return null;
 		}
 		
-		
 	}
+	
+	
 	
 	private static byte[] xorBytes(byte[] a, byte[] b) {
 		if(a.length != b.length) {
@@ -100,9 +131,13 @@ public class Envelope {
 		return c;
 	}
 	
+	
+	
 	public static KeyPair keyPair(byte[] pw) {
 		return new KeyPair(pw);
 	}
+	
+	
 	
 	public static byte[] ecEncrypt(Point V, byte[] M) {
 		SecureRandom random = new SecureRandom();
@@ -142,6 +177,8 @@ public class Envelope {
 		
 		return zct;
 	}
+	
+	
 	
 	public static byte[] ecDecrypt(byte[] zct, byte[] pw) {
 		byte[] z = new byte[132];
@@ -187,12 +224,9 @@ public class Envelope {
 			}
 	}
 	
+	
+	
 	public static byte[] ecSign(byte[] pw, byte[] m) {
-		
-//		byte[] s = sha3.kmacxof256(pw, new byte[]{}, 512, "K");
-//		
-//		BigInteger s2 = new BigInteger(s);
-//		s2 = s2.multiply(BigInteger.valueOf(4));
 		
 		byte[] k = sha3.kmacxof256(pw, m, 512, "N");
 		byte[] kSign = new byte[65];
@@ -231,6 +265,8 @@ public class Envelope {
 		return hz;
 	}
 	
+	
+	
 	public static boolean ecVerify(byte[] sig, byte[] m, Point V) {
 		byte[] h = new byte[sig.length / 2];
 		byte[] z = new byte[sig.length / 2];
@@ -257,13 +293,8 @@ public class Envelope {
 		} else {
 			return false;
 		}
+		
 	}
-	
-	
-	
-	
-	
-
 	
 	
 	
@@ -378,6 +409,8 @@ public class Envelope {
 		
 	}
 	
+	
+	
 	private static void testPart2() {
 		
 		System.out.println("Pick an operation or something");
@@ -480,8 +513,13 @@ public class Envelope {
 		
 	}
 	
+	
+	
 	public static void test() {
 		testPart1();
 		testPart2();
 	}
+	
+	
+	
 }

@@ -1,5 +1,24 @@
 import java.util.Arrays;
 
+
+
+/*
+ * Author: Austin Akers
+ * 
+ * References: 
+ * 		Materials provided by Professor Paulo Barreto including lecture slides, assignment description
+ * 		https://github.com/mjosaarinen/tiny_sha3
+ * 		https://github.com/NWc0de/KeccakUtils
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/C
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/Python
+ * 		NIST documentation:
+ * 			https://dx.doi.org/10.6028/NIST.SP.800-185
+ * 			https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
+ * 
+ * */
+
+
+
 public class sha3 {
 	
 	static long keccakf_rndc[] = {
@@ -25,9 +44,9 @@ public class sha3 {
 	
 	// Based on the example given in the slides for the project.
 	private static byte[] bytepad(byte[] X, int w) {
-		if (w <= 0) { // Example uses assert, maybe change? ----------------------------------------------------------------
+		if (w <= 0) {
 			System.out.println("bytepad validity check failed.");
-			return null; // CHANGE THIS? ----------------------------------------------------------------
+			return null;
 		}
 		
 		// left_encode(w) || X
@@ -46,10 +65,11 @@ public class sha3 {
 		return z;
 	}
 	
-	// I think this is supposed to encode the bytes of x in binary and then prepend the length of the encode and return it.
-	private static byte[] left_encode(int x) { // byte[] might not be correct return type, int may not be right param type ----------------------------------------------------------------
+	
+	// left_encode as defined in the NIST Standards
+	private static byte[] left_encode(int x) {
 		if (0 > x || x >= Math.pow(2, 2040)) {
-			System.out.println("left_encode validity check failed."); // Maybe change? ----------------------------------------------------------------
+			System.out.println("left_encode validity check failed.");
 			return null;
 		}
 		
@@ -87,10 +107,10 @@ public class sha3 {
 	}
 	
 	
-	
-	private static byte[] right_encode(int x) { // byte[] might not be correct return type, int may not be right param type ----------------------------------------------------------------
+	// left_encode as defined in the NIST Standards
+	private static byte[] right_encode(int x) {
 		if (0 > x || x >= Math.pow(2, 2040)) {
-			System.out.println("right_encode validity check failed."); // Maybe change? ----------------------------------------------------------------
+			System.out.println("right_encode validity check failed.");
 			return null;
 		}
 		
@@ -133,7 +153,7 @@ public class sha3 {
 	}
 	
 	
-	
+	// encode_string as defined in the NIST Standards
 	private static byte[] encode_string(byte[] S) {
 		if(0 > S.length || S.length >= Math.pow(2, 2040)) {
 			System.out.println("encode_string validity check failed."); // Maybe change? ----------------------------------------------------------------
@@ -160,6 +180,8 @@ public class sha3 {
 		return i;
 	}
 	
+	
+	
 	// Adapted from C readable version
 	private static long loadWord(byte[] x)
 	{
@@ -174,6 +196,7 @@ public class sha3 {
 	
 	
 	
+	// Adapted from KeccakUtils reference
 	private static int kecLog(int n) throws Exception {
 		if (n < 0) throw new Exception();
         int exp = -1;
@@ -184,13 +207,15 @@ public class sha3 {
         return exp;
 	}
     
+	
+	
     private static long rotL64(long x, int y) {
     	long xHelper = (x >> 1) & (0x7fffffffffffffffL);
     	return ((x) << (y)) | ((xHelper) >> (63 - (y)));
     }
 	
 	
-	// S is a bitstring of length b, n is the number of rounds. May need to add a param for b
+    // The keccak permutation function. Used all references for aid with this method and the methods which it calls, with a focus on the tiny_sha3 reference.
 	private static long[] keccakp(long[] S, int b, int n) {
 		// Convert S into a state array A
 		long[] S2 = S;
@@ -267,6 +292,8 @@ public class sha3 {
     	return S;
     }
     
+    
+    
     private static byte[] kecPad(byte[] N, int x) {
     	int numBytes = x / 8;
     	int j = numBytes - N.length % numBytes;
@@ -291,6 +318,7 @@ public class sha3 {
     	
     	return P;
     }
+    
     
     
     // The polymorphic version of the stateArrayConversion method which converts TO state array
@@ -320,6 +348,7 @@ public class sha3 {
     }
     
     
+    
     // The polymorphic version of the stateArrayConversion method which converts FROM state array TO a byte array
     private static byte[] stateArrayConversion(long[] S, int d) {
     	// Size of byte array should be 8 bytes for each long in the 5x5 state array
@@ -336,6 +365,8 @@ public class sha3 {
     	
     	return x;
     }
+    
+    
     
     private static byte[] kecSponge(byte[] N, int capacity, int d) {
     	int rate = 1600 - capacity;
@@ -374,6 +405,8 @@ public class sha3 {
     	return stateArrayConversion(outputState, d);
     }
     
+    
+    
     public static byte[] sha3(byte[] M, int L) {
     	
     	byte[] mPad = new byte[M.length + 1];
@@ -386,6 +419,8 @@ public class sha3 {
     	
     	return kecSponge(mPad, L*2, L);
     }
+    
+    
     
     public static byte[] kmacxof256(byte[] K, byte[] X, int L, String S) {
     	byte[] encK = encode_string(K);
@@ -403,6 +438,8 @@ public class sha3 {
     	
     }
     
+    
+    
     public static byte[] shake256(byte[] X, int L) {
     	
     	byte[] xPad = new byte[X.length + 1];
@@ -416,6 +453,8 @@ public class sha3 {
     	
     	return kecSponge(xPad, 512, L);
     }
+    
+    
     
     public static byte[] cShake256(byte[] X, int L, String N, String S) {
     	if(N.length() * 8 > Math.pow(2, 2040) || S.length() * 8 > Math.pow(2, 2040)) {

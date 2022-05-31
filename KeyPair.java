@@ -1,5 +1,24 @@
 import java.math.BigInteger;
 
+
+
+/*
+ * Author: Austin Akers
+ * 
+ * References: 
+ * 		Materials provided by Professor Paulo Barreto including lecture slides, assignment description
+ * 		https://github.com/mjosaarinen/tiny_sha3
+ * 		https://github.com/NWc0de/KeccakUtils
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/C
+ * 		https://github.com/XKCP/XKCP/tree/master/Standalone/CompactFIPS202/Python
+ * 		NIST documentation:
+ * 			https://dx.doi.org/10.6028/NIST.SP.800-185
+ * 			https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
+ * 
+ * */
+
+
+
 public class KeyPair {
 		private BigInteger privateKey;
 		private Point V;
