@@ -63,24 +63,24 @@ public class Program {
 		
 		
 		// Opening files
-		String fileName = System.getProperty("user.dir") + "/src/" + "Data.txt";
-		
-		String fileName2 = System.getProperty("user.dir") + "/src/" + "PublicKey.txt";
-		
-		String fileName3 = System.getProperty("user.dir") + "/src/" + "Signature.txt";
-		
-		String fileName4 = System.getProperty("user.dir") + "/src/" + "Encrypted.txt";
+//		String fileName = System.getProperty("user.dir") + "/src/" + "Data.txt";
+//
+//		String fileName2 = System.getProperty("user.dir") + "/src/" + "PublicKey.txt";
+//
+//		String fileName3 = System.getProperty("user.dir") + "/src/" + "Signature.txt";
+//
+//		String fileName4 = System.getProperty("user.dir") + "/src/" + "Encrypted.txt";
 		
 		// THE ABOVE LINES WORK IN ECLIPSE, WHILE THE BELOW WORK IN INTELLIJ
 		// COMMENT THE 4 LINES ACCORDING TO YOUR ENVIRONMENT
 		
-//		String fileName = "Data.txt";
-//		
-//		String fileName2 = "PublicKey.txt";
-//		
-//		String fileName3 = "Signature.txt";
-//		
-//		String fileName4 = "Encrypted.txt";
+		String fileName = "Data.txt";
+
+		String fileName2 = "PublicKey.txt";
+
+		String fileName3 = "Signature.txt";
+
+		String fileName4 = "Encrypted.txt";
 		
 		File file = new File(fileName);
 		
