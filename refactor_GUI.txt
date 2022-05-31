@@ -1,0 +1,2 @@
+This builds off of v2 by taking it and merging it with the first_refactor GUI branch.
+This is a fully functional working version of the crypto project CLI, but with GUI interoperability.
