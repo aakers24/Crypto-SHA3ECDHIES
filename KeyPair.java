@@ -7,7 +7,11 @@ public class KeyPair {
 		public KeyPair(byte[] pw) {
 			byte[] s = sha3.kmacxof256(pw, new byte[]{}, 512, "K");
 			
-			BigInteger s2 = new BigInteger(s);
+			byte[] sSig = new byte[s.length + 1];
+			
+			System.arraycopy(s, 0, sSig, 1, s.length);
+			
+			BigInteger s2 = new BigInteger(sSig);
 			
 			s2 = s2.multiply(BigInteger.valueOf(4));
 			

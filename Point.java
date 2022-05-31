@@ -6,7 +6,7 @@ public class Point {
 	
 	private static final BigInteger D = BigInteger.valueOf(-376014);
 	
-	private static final BigInteger P = BigInteger.valueOf(2).pow(521).subtract(BigInteger.ONE);
+	public static final BigInteger P = BigInteger.valueOf(2).pow(521).subtract(BigInteger.ONE);
 	
 	private static final Point NeutralElement = new Point(BigInteger.valueOf(0), BigInteger.valueOf(1));
 
@@ -119,7 +119,7 @@ public class Point {
 	
 	// Returns the opposite of a point given the initial point
 	public static Point opposite(Point ip) {
-		return new Point(ip.getX().negate(), ip.getY());
+		return new Point(ip.getX().negate().mod(P), ip.getY());
 	}
 	
 	
