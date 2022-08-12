@@ -7,3 +7,8 @@ ECKeyPair.java
 ECSign.java
 ECCrypt.java
 out
+Envelope.class
+KeyPair.class
+Point.class
+Program.class
+sha3.class

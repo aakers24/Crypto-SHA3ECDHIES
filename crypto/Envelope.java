@@ -367,9 +367,6 @@ public class Envelope {
 //		}
 		
 		
-		// !!!!!!!! Everything here has been tested and works properly !!!!!!!!
-		
-		
 		
 		// !!!!!!!! These are the outward facing, callable functionality methods. !!!!!!!!
 		

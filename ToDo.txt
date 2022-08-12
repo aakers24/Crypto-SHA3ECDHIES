@@ -1,0 +1,15 @@
+Fix 22 not exiting
+
+Fix 21 hashing differences?
+
+Abstract things
+
+Make the files like public key if they don't already exist?
+
+Select the output file / make a new one for each decrypt?
+
+use byte headers to determine file output and then write it as a file
+
+
+
+Continued GUI integration

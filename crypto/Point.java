@@ -91,7 +91,7 @@ public class Point {
 	
 	
 	// Exponentiation algorithm adapted from the project description/lecture slides wasn't working properly for all cases
-	// So I ended up modifying it to the be more like reference implementations
+	// So I ended up modifying it to be more like reference implementations
 	public Point multiplyScalar(BigInteger s) {
 		Point pointFactor = this;
 		
