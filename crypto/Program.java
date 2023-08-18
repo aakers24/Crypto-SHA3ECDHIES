@@ -99,6 +99,7 @@ public class Program {
 
 		Scanner consoleIn = new Scanner(System.in);
 		int option = -1;
+		int inputOption = -1;
 		KeyPair kp = null;
 
 
@@ -106,16 +107,47 @@ public class Program {
 		// Selecting a data file and
 		byte[] dataBytes = new byte[]{};
 		while(dataBytes.length == 0) {
-			dataBytes = selectDataFile();
+			System.out.println("-----\nWould you like to work with a file or text input? Enter 1 for file and 2 for text.");
+			try {
+				inputOption = consoleIn.nextInt();
+			} catch (InputMismatchException e) {
+				System.out.println("Please enter an integer.");
+				consoleIn.next();
+				continue;
+			}
+			if (inputOption == 1) { // File Picker
+				try {
+					dataBytes = selectDataFile();
+				} catch (NullPointerException e) {
+					System.out.println("A file wasn't chosen.");
+					continue;
+				}
+			} else if (inputOption == 2) { // Text was chosen
+				System.out.print("Enter your data: ");
+				consoleIn.nextLine();
+				// Take in new data
+				String rawInput = consoleIn.nextLine();
+				//byte[] inputData = parseData(rawInput);
+				dataBytes = rawInput.getBytes();
+			} else {
+				continue;
+			}
+
+			// For debugging. Files and text with same data should print the same results at this stage. If not, there is something wrong with data intake.
+//			for(int i = 0; i < dataBytes.length; i++) {
+//				System.out.print(String.format("%02X ", dataBytes[i]));
+//			}
+
+			inputOption = -1;
 		}
 
 
 
-		String fileName2 = "PublicKey.txt";
+		String fileName2 = "PublicKey";
 
-		String fileName3 = "Signature.txt";
+		String fileName3 = "Signature";
 
-		String fileName4 = "Encrypted.txt";
+		String fileName4 = "Encrypted";
 
 
 
@@ -231,37 +263,107 @@ public class Program {
 
 					// decrypt a given data file symmetrically under a given passphrase.
 				case 4:
-					// Uncomment to allow decrypting of text input data.
-//					System.out.print("Enter your encrypted data: ");
-//					byte[] encData = parseData(consoleIn.nextLine());
-//					System.out.println();
+					int decryptOption = -1;
+					while(decryptOption == -1) {
+						System.out.println("What would you like to decrypt? Enter 1 for a file, 2 for text input, or 3 for the default Encrypted file.");
+
+						try {
+							decryptOption = consoleIn.nextInt();
+						} catch (InputMismatchException e) {
+							System.out.println("Please enter an integer.");
+							consoleIn.next();
+							decryptOption = -1;
+							continue;
+						}
+						consoleIn.nextLine();
+					}
+
 					System.out.print("Enter your passphrase: ");
 					pass = consoleIn.nextLine().getBytes();
 					System.out.println();
 
-					try {
-						File file4 = new File(fileName4);
-						Scanner sc = new Scanner(file4);
+					if (decryptOption == 1) {
+						// Select a data file
+						JFileChooser chooser = new JFileChooser();
+						chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+						JDialog dialog = new JDialog();
+						int returnVal = chooser.showOpenDialog(dialog);
+						if (returnVal == JFileChooser.APPROVE_OPTION) {
+							File selectedFile = chooser.getSelectedFile();
+							System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+							try {
+								Scanner sc = new Scanner(selectedFile);
 
-						byte[] encData = parseData(sc.nextLine());
+								byte[] encData = parseData(sc.nextLine());
 
+								byte[] decrypted = Envelope.symDecrypt(encData, pass);
+
+								System.out.println("Decrypted Data: ");
+								try {
+									System.out.println(new String(decrypted, "UTF-8"));
+								} catch (UnsupportedEncodingException e){
+									System.out.println("There was a problem returning your data.");
+								}
+
+								sc.close();
+								continue;
+
+							} catch (NullPointerException e) {
+								System.out.println("Couldn't decrypt file.");
+								decryptOption = -1;
+								continue;
+							} catch (FileNotFoundException f) {
+								System.out.println("Couldn't decrypt file.");
+								decryptOption = -1;
+								continue;
+							}
+						} else {
+							System.out.println("Cancelled");
+						}
+					}
+
+					if (decryptOption == 2) {
+						// Uncomment to allow decrypting of text input data.
+						System.out.print("Enter your encrypted data: ");
+						byte[] encData = parseData(consoleIn.nextLine());
 						byte[] decrypted = Envelope.symDecrypt(encData, pass);
+						System.out.println();
 
 						System.out.println("Decrypted Data: ");
 						try {
 							System.out.println(new String(decrypted, "UTF-8"));
 						} catch (UnsupportedEncodingException e){
-							System.out.println("");
+							System.out.println("There was a problem returning your data.");
 						}
+						continue;
+					}
+
+					if (decryptOption == 3) {
+						try {
+							File file4 = new File(fileName4);
+							Scanner sc = new Scanner(file4);
+
+							byte[] encData = parseData(sc.nextLine());
+
+							byte[] decrypted = Envelope.symDecrypt(encData, pass);
+
 //						for(int i = 0; i < decrypted.length; i++) {
 //							System.out.print(String.format("%02X ", decrypted[i]));
 //						}
 
-						sc.close();
-						continue;
-					} catch (FileNotFoundException e) {
-						System.out.println("Couldn't retrieve information from Encrypted.txt");
-						continue;
+							System.out.println("Decrypted Data: ");
+							try {
+								System.out.println(new String(decrypted, "UTF-8"));
+							} catch (UnsupportedEncodingException e){
+								System.out.println("There was a problem returning your data.");
+							}
+
+							sc.close();
+							continue;
+						} catch (FileNotFoundException e) {
+							System.out.println("Couldn't retrieve information from Encrypted.txt");
+							continue;
+						}
 					}
 
 
@@ -293,7 +395,7 @@ public class Program {
 
 						w.write(kp.getPoint().getX() + " " + kp.getPoint().getY());
 						w.close();
-						System.out.println("Wrote to PublicKey.txt");
+						System.out.println("Wrote to PublicKey");
 					} catch (IOException e) {
 						System.out.println("Public Key file not found.");
 						continue;
@@ -341,7 +443,7 @@ public class Program {
 						sc.close();
 						continue;
 					} catch (FileNotFoundException e) {
-						System.out.println("Couldn't retrieve information from PublicKey.txt");
+						System.out.println("Couldn't retrieve information from PublicKey");
 						continue;
 					}
 
@@ -412,7 +514,7 @@ public class Program {
 						sc.close();
 						continue;
 					} catch (FileNotFoundException e) {
-						System.out.println("Couldn't retrieve information from PublicKey.txt");
+						System.out.println("Couldn't retrieve information from PublicKey");
 						continue;
 					}
 
@@ -495,7 +597,7 @@ public class Program {
 						sc.close();
 						continue;
 					} catch (FileNotFoundException e) {
-						System.out.println("Couldn't retrieve information from PublicKey.txt");
+						System.out.println("Couldn't retrieve information from PublicKey");
 						continue;
 					}
 
@@ -507,6 +609,7 @@ public class Program {
 		}
 
 		consoleIn.close();
+		return;
 	}
 
 }

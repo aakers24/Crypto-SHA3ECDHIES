@@ -13,7 +13,7 @@ class Program extends JFrame {
     private final PanelFactory panelFactory;
 
     /**
-     * Constructor to instantiates the UI
+     * Constructor to instantiate the UI
      */
     private Program() {
         panelFactory = new PanelFactory();
