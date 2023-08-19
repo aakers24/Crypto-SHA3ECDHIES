@@ -3,8 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="eb87ea40-e998-40a1-9cb6-9c3df8fb51bc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Encrypted.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Encrypted.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Program.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Program.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Encrypted" beforeDir="false" afterPath="$PROJECT_DIR$/Encrypted" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Encrypted.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HesIn.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PublicKey.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Signature.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ToDo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ToDo.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/crypto/Program.java" beforeDir="false" afterPath="$PROJECT_DIR$/crypto/Program.java" afterDir="false" />
     </list>
@@ -24,16 +27,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/Austin/IdeaProjects/Crypto",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Austin/IdeaProjects/Crypto&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.Program">
     <configuration name="GUI.Program" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="GUI.Program" />
@@ -79,15 +82,15 @@
     </task>
     <servers />
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/crypto/Program.java</url>
-          <line>107</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

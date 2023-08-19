@@ -1,17 +1,15 @@
-Fix 22 not exiting
+Abstract things in Program - Some stuff is pretty ugly right now.
 
-Abstract things
+*** Make the files like public key if they don't already exist (In general more elegant file handling/functionality)
 
-*** Make the files like public key if they don't already exist
+	- Maybe use the same method as when saving a decrypted file as it just creates the file.
 
-*** Select the output file / (make a new one for each decrypt?)
+*** Select the output file / (make a new one for each encrypt&decrypt?)
 
-*** use byte headers to determine file output and then write it as a file
+*** Fix weird newline spacings in console output
+
+Refine, tidy up, and then package working versions as JARs for easier distribution.
+
+Add post-quantum functionalities/section
 
 Continued GUI integration
-
-
-
-!!!!!
-I started restructuring the flow and making the file/text functionalities work together rather than through separate functions. I have made it through option 4.
-!!!!!
